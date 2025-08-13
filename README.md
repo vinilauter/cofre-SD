@@ -11,3 +11,6 @@ No primeiro dia de trabalho no projeto houve uma breve reunião para a divisão 
 ## Dia 2 (12/08/2025)
 
 Pela manhã foi entregue o código para a reprogramação de senha, com Caio o testando pela tarde.
+
+Mais tarde na hora da aula foram encontrados entraves nos testes no Quartus, sendo o trabalho não concluído no dia e o código enviado a para a refatoração.
+

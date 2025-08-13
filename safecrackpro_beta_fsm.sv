@@ -1,4 +1,5 @@
 module sc (
+module safecrackpro_v2_fsm (
     input  logic       clk,
     input  logic       rst,
     input  logic [3:0] btn,        // Entradas dos botões (BTN[3:0])
@@ -66,6 +67,20 @@ module sc (
             // No estado desbloqueado, se BTN0 for pressionado, entra em modo de programação
             S3: begin if (btn == 4'b0001) next = PROG_S0;
                 else next = S3; end // Senão, permanece desbloqueado
+            S0: if (btn == passcode[0]) next = S1;
+                else if (|btn and i == 3) for(contar = 0;contar < 250/*limite do clock para 10s*/; contar++) begin next = s0; end // Se errar, permanece em S0
+					 else if (|btn) next = s0;
+
+            S1: if (btn == passcode[1]) next = S2;
+                else if (|btn and i == 3) for(contar = 0;contar < 250/*limite do clock para 10s*/; contar++) begin next = s0; end // Se errar, permanece em S0
+					 else if (|btn) next = s0;
+					
+				S2: if (btn == passcode[2]) next = S3;
+                else if (|btn and i == 3) for(contar = 0;contar < 250/*limite do clock para 10s*/; contar++) begin next = s0; end // Se errar, permanece em S0
+					 else if (|btn) next = s0;
+            // No estado desbloqueado, se BTN0 for pressionado, entra em modo de programação
+            S3: if (btn == 4'b0001) next = PROG_S0;
+                else next = S3; // Senão, permanece desbloqueado
 
             // Lógica para o modo de programação
             PROG_S0: if (|btn) next = PROG_S1; // Qualquer botão pressionado avança
