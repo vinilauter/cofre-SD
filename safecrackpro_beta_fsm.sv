@@ -20,6 +20,8 @@ module safecrackpro_v2_fsm (
 
     // A senha agora é ser modificável
     logic [3:0] passcode[2:0];
+	 // incrimento de 32 bit (contador de clock)
+	 logic [31:0] i;
 
     // Lógica Sequencial
     always_ff @(posedge clk) begin
@@ -50,14 +52,16 @@ module safecrackpro_v2_fsm (
         next = state; // Por padrão, mantém o estado atual se nada acontecer
         case (state)
             S0: if (btn == passcode[0]) next = S1;
-                else if (|btn) next = S0; // Se errar, permanece em S0
+                else if (|btn and i == 3) for(contar = 0;contar < 250/*limite do clock para 10s*/; contar++) begin next = s0; end // Se errar, permanece em S0
+					 else if (|btn) next = s0;
 
             S1: if (btn == passcode[1]) next = S2;
-                else if (|btn) next = S0; // Se errar, volta para o início
-
-            S2: if (btn == passcode[2]) next = S3;
-                else if (|btn) next = S0; // Se errar, volta para o início
-
+                else if (|btn and i == 3) for(contar = 0;contar < 250/*limite do clock para 10s*/; contar++) begin next = s0; end // Se errar, permanece em S0
+					 else if (|btn) next = s0;
+					
+				S2: if (btn == passcode[2]) next = S3;
+                else if (|btn and i == 3) for(contar = 0;contar < 250/*limite do clock para 10s*/; contar++) begin next = s0; end // Se errar, permanece em S0
+					 else if (|btn) next = s0;
             // No estado desbloqueado, se BTN0 for pressionado, entra em modo de programação
             S3: if (btn == 4'b0001) next = PROG_S0;
                 else next = S3; // Senão, permanece desbloqueado
