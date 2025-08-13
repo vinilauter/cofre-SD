@@ -52,20 +52,20 @@ module sc (
     always_comb begin
         next = state; // Por padrão, mantém o estado atual se nada acontecer
         case (state)
-            S0: if (btn == passcode[0]) next = S1;
-                else if (|btn && i == 3) for(contar = 0;contar < 250/*limite do clock para 10s*/; contar++) begin next = S0; end // Se errar, permanece em S0
-					 else if (|btn) next = S0;
+            S0: begin if (btn == passcode[0]) next = S1;
+                else if (|btn && i == 3)  begin next = S0; end // Se errar, permanece em S0
+					 else if (|btn) next = S0; end
 
-            S1: if (btn == passcode[1]) next = S2;
-                else if (|btn && i == 3) for(contar = 0;contar < 250/*limite do clock para 10s*/; contar++) begin next = S0; end // Se errar, permanece em S0
-					 else if (|btn) next = S0;
+            S1: begin if (btn == passcode[1]) next = S2;
+                else if (|btn && i == 3)  begin next = S0; end // Se errar, permanece em S0
+					 else if (|btn) next = S0; end
 					
-				S2: if (btn == passcode[2]) next = S3;
-                else if (|btn && i == 3) for(contar = 0;contar < 250/*limite do clock para 10s*/; contar++) begin next = S0; end // Se errar, permanece em S0
-					 else if (|btn) next = S0;
+				S2: begin if (btn == passcode[2]) next = S3;
+                else if (|btn && i == 3) begin next = S0; end // Se errar, permanece em S0
+					 else if (|btn) next = S0; end
             // No estado desbloqueado, se BTN0 for pressionado, entra em modo de programação
-            S3: if (btn == 4'b0001) next = PROG_S0;
-                else next = S3; // Senão, permanece desbloqueado
+            S3: begin if (btn == 4'b0001) next = PROG_S0;
+                else next = S3; end // Senão, permanece desbloqueado
 
             // Lógica para o modo de programação
             PROG_S0: if (|btn) next = PROG_S1; // Qualquer botão pressionado avança
